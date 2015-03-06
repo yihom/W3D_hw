@@ -47,9 +47,9 @@ function init()
 	camera.lookAt (new THREE.Vector3(0,0,0));
 
 	// FLOOR
-	var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
+	var floorTexture = new THREE.ImageUtils.loadTexture( 'images/123.jpg' );
 	floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping; 
-	floorTexture.repeat.set( 4, 4 );
+//	floorTexture.repeat.set( 4, 4 );
 	var floorMaterial = new THREE.MeshBasicMaterial( { map: floorTexture, side: THREE.DoubleSide } );
 	
 	var floorGeometry = new THREE.PlaneGeometry(500, 500);//, 10, 10);  // not clear what segment does
