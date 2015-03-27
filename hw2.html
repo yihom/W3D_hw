@@ -2,7 +2,9 @@
 <html>
 <head>
 <div id="info">homework2</div>
-<div id="info2">Z to open/close the door</div>
+<div id="info2">
+	<a href="javascript:selectEuler();">open/close</a>
+</div>
 <style>
 #info {
     position: absolute;
@@ -165,7 +167,10 @@ function animate() {
     requestAnimationFrame(animate);
     render();
 }
-
+function selectEuler ()
+{
+	turn=!turn;
+}
 function render() {
 	
 	if ( keyboard.down("Z"))
