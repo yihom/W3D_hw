@@ -46,6 +46,7 @@ KeyboardState.keyName = function ( keyCode )
 
 KeyboardState.onKeyUp = function(event)
 {
++event.preventDefault();
 	var key = KeyboardState.keyName(event.keyCode);
 	if ( KeyboardState.status[key] )
 		KeyboardState.status[key].pressed = false;
@@ -53,6 +54,7 @@ KeyboardState.onKeyUp = function(event)
 
 KeyboardState.onKeyDown = function(event)
 {
++event.preventDefault();
 	var key = KeyboardState.keyName(event.keyCode);
 	if ( !KeyboardState.status[key] )
 		KeyboardState.status[key] = { down: false, pressed: false, up: false, updatedPreviously: false };
