@@ -139,6 +139,11 @@ function init() {
         vertexShader: vertexShader,
         fragmentShader: fragmentShader
     });
+    mesh0.customDepthMaterial = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader
+    });	
 ///////////////////////////////////////////////////////////////////////////////
 	
     // spotlight
