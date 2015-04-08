@@ -164,8 +164,9 @@ function init() {
     var amblight = new THREE.AmbientLight(0x888888); // soft white light
     scene.add(amblight);
     floor.receiveShadow = true;	
-	tire.castShadow = true;			
-    tire.receiveShadow = true;	
+	mesh.castShadow = true;			
+	mesh0.castShadow = true;				
+	mesh2.castShadow = true;					
 //	floor.castShadow = true;	
 	
     var gridXZ = new THREE.GridHelper(100, 10);
