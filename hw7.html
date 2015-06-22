@@ -2,14 +2,18 @@
 <head>
 <div id="state"></div>
 <div id="container">
-<div id="cnvsFrame">
-<canvas id="cnvs"> </canvas>
+    <div id="cnvsFrame">
+        <canvas id="cnvs"></canvas>
+    </div>
+</div>
 
 <div id="player">User Name:
     <input id="user" type="text" value="yihom">
     <br/>
     <br/>
     <button id="login">Login</button>
+	<button id="clear">clear records</button>
+	<button id="reload">replay</button>
     <p id='greeting'></p>
 </div>
 
@@ -26,13 +30,9 @@
 }
 
 #player {
-    position: absolute;
-    top: 50px;
-	right: 400px;
-    width: 100%;
-    color: #ffffff;
-    text-align: center;
-	
+	float:right;
+	margin-right: 80px;
+	margin-top: 30px;
 }
 #state {
     position: absolute;
@@ -69,6 +69,12 @@ body {
 <script src='threex.text.js'></script>
 <script src="js/jquery-2.1.4.min.js"></script>
 
+<audio id="dead" style="display:none">
+<source src="sound/dead.mp3" type='audio/mp3'>
+</audio>
+<audio id="hammeronce" style="display:none">
+<source src="sound/hammeronce.wav" type='audio/wav'>
+</audio>
 
 <script id="vertexShader" type="x-shader/x-vertex">
     void main() {
@@ -134,8 +140,8 @@ var name;
 var goplay=5;
 var records = [];
 var heigh=0;
-
-
+var hammeronce,dead;
+var gg=0;
 
 var Puck = function () {
     this.vel = new THREE.Vector3();
@@ -162,10 +168,14 @@ Puck.prototype.collision = function () {
         this.pos.x = 100;
         this.vel.set(-this.vel.x, 0, this.vel.z);
         this.pColor.setHSL(Math.random(), Math.random(), Math.random() / 2 + 0.5);
+		if(this.mesh.visible === true)
+		hammeronce.play();
     } else if (this.pos.x < -100) {
         this.pos.x = -100;
         this.vel.set(-this.vel.x, 0, this.vel.z);
         this.pColor.setHSL(Math.random(), Math.random(), Math.random() / 2 + 0.5);
+		if(this.mesh.visible === true)
+		hammeronce.play();		
     }
 	if(this.mesh.visible == true){
     if (this.pos.z > 100) {
@@ -174,6 +184,8 @@ Puck.prototype.collision = function () {
 				this.pos.z = 100;
 				this.vel.set(this.vel.x, 0, -this.vel.z);
 				this.pColor.setHSL(Math.random(), Math.random(), Math.random() / 2 + 0.5);
+				if(this.mesh.visible === true)
+				hammeronce.play();		
 			}else {
 				this.mesh.visible = false;
 				this.life = 0;
@@ -184,6 +196,8 @@ Puck.prototype.collision = function () {
 				this.pos.z = 100;
 				this.vel.set(this.vel.x, 0, -this.vel.z);
 				this.pColor.setHSL(Math.random(), Math.random(), Math.random() / 2 + 0.5);
+				if(this.mesh.visible === true)
+				hammeronce.play();		
 			}
 
     } else if (this.pos.z < -100) {
@@ -192,6 +206,8 @@ Puck.prototype.collision = function () {
 				this.pos.z = -100;
 				this.vel.set(this.vel.x, 0, -this.vel.z);
 				this.pColor.setHSL(Math.random(), Math.random(), Math.random() / 2 + 0.5);
+				if(this.mesh.visible === true)
+				hammeronce.play();		
 			}else {
 				this.mesh.visible = false;
 				this.life = 0;
@@ -202,6 +218,8 @@ Puck.prototype.collision = function () {
 				this.pos.z = -100;
 				this.vel.set(this.vel.x, 0, -this.vel.z);
 				this.pColor.setHSL(Math.random(), Math.random(), Math.random() / 2 + 0.5);
+				if(this.mesh.visible === true)
+				hammeronce.play();		
 			}
     }
 	}
@@ -227,7 +245,9 @@ function init() {
     var theCanvas = document.getElementById("cnvs");
     var theCanvasFrame = document.getElementById("cnvsFrame");
 	stateInfo = window.document.getElementById('state');
-
+	hammeronce = document.getElementById ('hammeronce');
+	dead = document.getElementById ('dead');
+	
     renderer = new THREE.WebGLRenderer({
         canvas: theCanvas,
         antialias: true
@@ -331,11 +351,6 @@ function init() {
         score: record_new[i].score
     });}}
 	
-	records.push({
-        name: "yihom",
-        score: 300
-    });	
-	
 	
     // add first puck
     pucks.push(newPuck());
@@ -405,18 +420,17 @@ function bigger(){
 }
 
 function start(){
-/*	if(goplay>0)
+	if(goplay==0)
 	{
-	console.log(goplay);
-		goplay--;
-	}
-	else{*/
 		pucks[0].vel = new THREE.Vector3(150 * (Math.random() * 2 - 1), 0, 170 * (Math.random() * 2 - 1));
 		setTimeout (startNewPuck, 1000);
 		setTimeout (bigger, 1000);
 		setTimeout (point, 0);
-//	}
-//	setTimeout (start, 1000);
+			}
+	else{
+		goplay--;
+		setTimeout (start, 1000);
+	}
 }
 function over(){
 	for(var i = 0; i<6; i++ ){
@@ -441,6 +455,7 @@ function animate() {
         puck.update(dt);
         puck.collision();
     });
+	life=5;
 	survive();
 	life=5-death;
 
@@ -448,7 +463,9 @@ function animate() {
 		var text = 'score: ' + inscore.toFixed(2) + ', ' + 'life: ' + life.toFixed(2)+'<br/>';
 		stateInfo.innerHTML = text;
 	}
-	else{
+	else if(gg==0){
+		dead.play();
+		gg=1;
 		over();
 		save();
 		var text = 'score: ' + inscore.toFixed(2) + ', ' + 'life: ' + life.toFixed(2)+'<br/>';
@@ -472,6 +489,16 @@ $("#login").click(function () {
     } else {
         document.getElementById('greeting').innerHTML = "Welcome!";
     }
+});
+
+
+$("#clear").click(function(){
+    localStorage.removeItem("scores");
+    alert("clear all cache")
+});
+
+$("#reload").click(function(){
+    window.location.reload();
 });
 
 function save(){
